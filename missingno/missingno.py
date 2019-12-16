@@ -47,14 +47,17 @@ def matrix(df,
 
     # Set up the matplotlib grid layout. A unary subplot if no sparkline, a left-right splot if yes sparkline.
     if ax is None:
-        plt.figure(figsize=figsize)
+        fig = plt.figure(figsize=figsize)
         if sparkline:
-            gs = gridspec.GridSpec(1, 2, width_ratios=width_ratios)
+            gs = gridspec.GridSpec(1, 2, width_ratios=width_ratios, figure=fig)
             gs.update(wspace=0.08)
-            ax1 = plt.subplot(gs[1])
+            # ax1 = plt.subplot(gs[1])
+            ax1 = fig.add_subplot(gs[1])
         else:
-            gs = gridspec.GridSpec(1, 1)
-        ax0 = plt.subplot(gs[0])
+            gs = gridspec.GridSpec(1, 1, figure=fig)
+        # ax0 = plt.subplot(gs[0])
+        ax0 = fig.add_subplot(gs[0])
+
     else:
         if sparkline is not False:
             warnings.warn(
@@ -200,7 +203,8 @@ def matrix(df,
         )
         plt.show()
     else:
-        return ax0
+        # return ax0
+        return fig
 
 
 def bar(df, figsize=(24, 10), fontsize=16, labels=None, log=False, color='dimgray', inline=False,
@@ -286,12 +290,12 @@ def bar(df, figsize=(24, 10), fontsize=16, labels=None, log=False, color='dimgra
 
 def heatmap(df, inline=False,
             filter=None, n=0, p=0, sort=None,
-            figsize=(20, 12), fontsize=16, labels=True, 
+            figsize=(20, 12), fontsize=16, labels=True,
             cmap='RdBu', vmin=-1, vmax=1, cbar=True, ax=None
             ):
     """
     Presents a `seaborn` heatmap visualization of nullity correlation in the given DataFrame.
-    
+
     Note that this visualization has no special support for large datasets. For those, try the dendrogram instead.
 
     :param df: The DataFrame whose completeness is being heatmapped.
@@ -385,7 +389,7 @@ def dendrogram(df, method='average',
     left unspecified the dendrogram will automatically swap to a horizontal display to fit the additional variables.
 
     :param df: The DataFrame whose completeness is being dendrogrammed.
-    :param method: The distance measure being used for clustering. This is a parameter that is passed to 
+    :param method: The distance measure being used for clustering. This is a parameter that is passed to
     `scipy.hierarchy`.
     :param filter: The filter to apply to the heatmap. Should be one of "top", "bottom", or None (default).
     :param n: The cap on the number of columns to include in the filtered DataFrame.
@@ -504,7 +508,7 @@ def geoplot(df,
 
     if gplt.__version__ >= "0.3.0":
         raise ImportError(
-            "The missingno geoplot function requires geoplot package version 0.2.4 or lower." 
+            "The missingno geoplot function requires geoplot package version 0.2.4 or lower."
             "To use the geoplot function, downgrade to an older version of the geoplot package."
         )
 
